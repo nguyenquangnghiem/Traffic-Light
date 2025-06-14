@@ -1,0 +1,22 @@
+read_verilog TRAFFIC_LIGHT.v
+
+hierarchy -check -top TRAFFIC_LIGHT
+
+proc
+opt -full
+memory
+opt -full
+
+synth -top TRAFFIC_LIGHT -flatten -run :fine
+
+techmap -map +/techmap.v
+
+# Nếu bạn có thư viện công nghệ thì thêm abc tối ưu:
+# read_liberty -lib my_cells.lib
+# abc -liberty my_cells.lib
+
+write_verilog -noattr -noexpr -nohex -nodec cpu_synth.v
+
+write_json traffic_light.json
+
+show -format dot -prefix traffic_light_design TRAFFIC_LIGHT
